@@ -1,0 +1,29 @@
+name: Daily Faction Stats
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch Torn stats
+        env:
+          TORN_API_KEY: ${{ secrets.TORN_API_KEY }}
+        run: node fetch_stats.js
+
+      - name: Commit and push data
+        run: |
+          git config user.name "torn-bot"
+          git config user.email "bot@torn"
+          git add data/
+          git commit -m "stats: $(date -u +%Y-%m-%d)" || echo "No changes"
+          git push
