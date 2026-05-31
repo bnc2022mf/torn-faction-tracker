@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
+    inputs:
+      backfill_from:
+        description: 'Backfill from date (YYYY-MM-DD) — leave empty for normal run'
+        required: false
 
 jobs:
   fetch:
@@ -18,6 +22,7 @@ jobs:
       - name: Fetch Torn stats
         env:
           TORN_API_KEY: ${{ secrets.TORN_API_KEY }}
+          BACKFILL_FROM: ${{ github.event.inputs.backfill_from }}
         run: node fetch_stats.js
 
       - name: Commit and push data
