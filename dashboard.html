@@ -1,37 +1,435 @@
-name: Daily Faction Stats
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faction Dashboard · Lightning Of Destruction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #0a0c10; --surface: #111520; --surface2: #171d2e;
+    --border: rgba(255,255,255,0.07); --accent: #e84040; --accent2: #f97316;
+    --green: #22c55e; --blue: #3b82f6; --yellow: #eab308;
+    --text: #e2e8f0; --muted: #64748b;
+    --mono: 'Share Tech Mono', monospace; --sans: 'Barlow', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none; z-index: 9999;
+  }
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem; border-bottom: 1px solid var(--border); background: var(--surface);
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 36px; height: 36px; background: var(--accent);
+    clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 14px; color: #fff;
+  }
+  .logo h1 { font-family: var(--mono); font-size: 15px; letter-spacing: 0.15em; text-transform: uppercase; }
+  .logo span { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; font-family: var(--mono); }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .live-badge { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: 0.08em; }
+  .live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+  .countdown { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+  .btn-refresh {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    padding: 6px 14px; cursor: pointer; border-radius: 3px; text-transform: uppercase; transition: all 0.2s;
+  }
+  .btn-refresh:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-refresh.spinning { animation: spin 0.6s linear; }
+  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  .api-bar {
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    padding: 8px 2rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .api-bar label { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; white-space: nowrap; }
+  .api-bar input {
+    background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    font-family: var(--mono); font-size: 12px; padding: 5px 10px; border-radius: 3px; width: 220px; outline: none;
+  }
+  .api-bar input:focus { border-color: var(--accent); }
+  .btn-connect {
+    background: var(--accent); border: none; color: #fff;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+    padding: 6px 18px; cursor: pointer; border-radius: 3px; text-transform: uppercase; transition: background 0.2s;
+  }
+  .btn-connect:hover { background: #c53030; }
+  .api-status { font-family: var(--mono); font-size: 11px; }
+  .api-status.ok { color: var(--green); }
+  .api-status.err { color: var(--accent); }
+  .api-status.loading { color: var(--yellow); }
+  .last-updated { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-left: auto; }
+  main { padding: 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    padding: 16px 18px; position: relative; overflow: hidden; transition: border-color 0.3s;
+  }
+  .metric:hover { border-color: rgba(255,255,255,0.15); }
+  .metric::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .metric.red::before { background: var(--accent); }
+  .metric.orange::before { background: var(--accent2); }
+  .metric.green::before { background: var(--green); }
+  .metric.blue::before { background: var(--blue); }
+  .metric.yellow::before { background: var(--yellow); }
+  .metric.purple::before { background: #a855f7; }
+  .metric .label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  .metric .val { font-family: var(--mono); font-size: 26px; color: var(--text); }
+  .metric .sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
+  @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+  }
+  .panel-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+  .panel-body { padding: 16px; }
+  .toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .toggle {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 2px; cursor: pointer; border: 1px solid transparent;
+    transition: all 0.2s; background: var(--bg); color: var(--muted); opacity: 1;
+  }
+  .toggle.active-respect { border-color: var(--accent); color: var(--accent); }
+  .toggle.active-hits { border-color: var(--blue); color: var(--blue); }
+  .toggle.active-assists { border-color: var(--green); color: var(--green); }
+  .toggle.active-losses { border-color: var(--accent2); color: var(--accent2); }
+  .toggle.inactive { opacity: 0.3; }
+  .chart-wrap { position: relative; height: 260px; }
+  .members-table { width: 100%; border-collapse: collapse; }
+  .members-table th {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--muted);
+    text-transform: uppercase; text-align: left; padding: 8px 10px;
+    border-bottom: 1px solid var(--border); font-weight: 400;
+  }
+  .members-table th.num { text-align: right; }
+  .members-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+  .members-table td.num { text-align: right; font-family: var(--mono); font-size: 12px; }
+  .members-table tr:last-child td { border-bottom: none; }
+  .members-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .member-name { font-weight: 500; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: middle; }
+  .status-online { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .status-idle { background: var(--yellow); }
+  .status-offline { background: var(--muted); }
+  .last-seen { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+  .respect-val { color: var(--accent); }
+  .empty { text-align: center; padding: 3rem; color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; }
+  .full-panel { margin-bottom: 1.5rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <div class="logo-icon">T</div>
+    <div>
+      <h1>Faction Dashboard</h1>
+      <span id="factionName">Torn RPG · Live Stats</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+    <span class="countdown" id="countdown">Next refresh in 5:00</span>
+    <button class="btn-refresh" id="btnRefresh" onclick="manualRefresh()">↻ Refresh</button>
+  </div>
+</header>
 
-on:
-  schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
-    inputs:
-      backfill_from:
-        description: 'Backfill from date (YYYY-MM-DD) — leave empty for normal run'
-        required: false
+<div class="api-bar">
+  <label>API KEY</label>
+  <input type="password" id="apiKeyInput" placeholder="Paste your Torn API key..." />
+  <button class="btn-connect" onclick="connect()">Connect</button>
+  <span class="api-status" id="apiStatus"></span>
+  <span class="last-updated" id="lastUpdated"></span>
+</div>
 
-jobs:
-  fetch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+<main>
+  <div class="metrics">
+    <div class="metric purple"><div class="label">Faction Respect</div><div class="val" id="m-faction-respect">—</div><div class="sub" id="m-faction-rank">All time total</div></div>
+    <div class="metric red"><div class="label">Respect Today</div><div class="val" id="m-respect">—</div><div class="sub">From attacks</div></div>
+    <div class="metric blue"><div class="label">Hits Today</div><div class="val" id="m-hits">—</div></div>
+    <div class="metric green"><div class="label">Assists Today</div><div class="val" id="m-assists">—</div></div>
+    <div class="metric orange"><div class="label">Losses Today</div><div class="val" id="m-losses">—</div></div>
+    <div class="metric yellow"><div class="label">Members Online</div><div class="val" id="m-online">—</div><div class="sub" id="m-total-members"></div></div>
+  </div>
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+  <div class="full-panel panel">
+    <div class="panel-header">
+      <span class="panel-title">Daily Stats — Last 14 Days</span>
+      <div class="toggle-group">
+        <span class="toggle active-respect" data-stat="respect" onclick="toggleStat(this)">Respect</span>
+        <span class="toggle active-hits" data-stat="hits" onclick="toggleStat(this)">Hits</span>
+        <span class="toggle active-assists" data-stat="assists" onclick="toggleStat(this)">Assists</span>
+        <span class="toggle active-losses" data-stat="losses" onclick="toggleStat(this)">Losses</span>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="chart-wrap"><canvas id="mainChart" role="img" aria-label="Daily faction stats over last 14 days">Daily faction statistics.</canvas></div>
+    </div>
+  </div>
 
-      - name: Fetch Torn stats
-        env:
-          TORN_API_KEY: ${{ secrets.TORN_API_KEY }}
-          BACKFILL_FROM: ${{ github.event.inputs.backfill_from }}
-        run: node fetch_stats.js
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Member Activity</span>
+        <span class="panel-title" id="memberCount">—</span>
+      </div>
+      <div style="overflow-y:auto;max-height:420px;">
+        <table class="members-table">
+          <thead><tr>
+            <th>Member</th><th>Status</th>
+            <th class="num">Respect</th><th class="num">Hits</th><th class="num">Assists</th>
+          </tr></thead>
+          <tbody id="membersBody"><tr><td colspan="5" class="empty">Connect your API key</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Today's Leaderboard</span>
+        <span class="panel-title">By Respect Earned</span>
+      </div>
+      <div style="overflow-y:auto;max-height:420px;">
+        <table class="members-table">
+          <thead><tr>
+            <th>#</th><th>Member</th><th class="num">Respect</th><th class="num">Hits</th>
+          </tr></thead>
+          <tbody id="leaderBody"><tr><td colspan="4" class="empty">No data yet</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
 
-      - name: Commit and push data
-        run: |
-          git config user.name "torn-bot"
-          git config user.email "bot@torn"
-          git add data/
-          git diff --staged --quiet || git commit -m "stats: $(date -u +%Y-%m-%d)"
-          git push --force origin main
+<script>
+const GITHUB_OWNER = 'bnc2022mf';
+const GITHUB_REPO  = 'torn-faction-tracker';
+
+// Attack results that count as a successful hit for the attacker
+const HIT_RESULTS = ['Attacked','Hospitalized','Mugged','Arrested','Escape','Timeout','Special'];
+
+let apiKey = localStorage.getItem('torn_api_key') || '';
+let chart = null;
+let activeStats = { respect: true, hits: true, assists: true, losses: true };
+let refreshTimer = null;
+let countdownVal = 300;
+let historicalData = [];
+
+if (apiKey) { document.getElementById('apiKeyInput').value = apiKey; init(); }
+
+function connect() {
+  apiKey = document.getElementById('apiKeyInput').value.trim();
+  if (!apiKey) return;
+  localStorage.setItem('torn_api_key', apiKey);
+  init();
+}
+
+async function init() {
+  setStatus('loading', 'Connecting...');
+  await Promise.all([fetchLiveData(), fetchHistoricalData()]);
+  startAutoRefresh();
+}
+
+async function manualRefresh() {
+  const btn = document.getElementById('btnRefresh');
+  btn.classList.add('spinning');
+  await Promise.all([fetchLiveData(), fetchHistoricalData()]);
+  countdownVal = 300;
+  setTimeout(() => btn.classList.remove('spinning'), 600);
+}
+
+function startAutoRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  countdownVal = 300;
+  refreshTimer = setInterval(async () => {
+    countdownVal--;
+    updateCountdown();
+    if (countdownVal <= 0) { countdownVal = 300; await Promise.all([fetchLiveData(), fetchHistoricalData()]); }
+  }, 1000);
+}
+
+function updateCountdown() {
+  const m = Math.floor(countdownVal / 60), s = countdownVal % 60;
+  document.getElementById('countdown').textContent = `Next refresh in ${m}:${String(s).padStart(2,'0')}`;
+}
+
+async function fetchLiveData() {
+  if (!apiKey) return;
+  try {
+    const fromTs = Math.floor(Date.now() / 1000) - 86400;
+    const [basicRes, attacksRes, statsRes] = await Promise.all([
+      fetch(`https://api.torn.com/faction/?selections=basic&key=${apiKey}`),
+      fetch(`https://api.torn.com/faction/?selections=attacks&from=${fromTs}&key=${apiKey}`),
+      fetch(`https://api.torn.com/faction/?selections=basic&key=${apiKey}`)
+    ]);
+    const basic   = await basicRes.json();
+    const attacks = await attacksRes.json();
+
+    if (basic.error) { setStatus('err', `Error: ${basic.error.error}`); return; }
+
+    // Faction name + total respect
+    document.getElementById('factionName').textContent = `${basic.name} · Live Stats`;
+    document.title = `${basic.name} · Faction Dashboard`;
+    const factionRespect = basic.respect || 0;
+    document.getElementById('m-faction-respect').textContent = factionRespect.toLocaleString();
+    document.getElementById('m-faction-rank').textContent = `Rank: ${basic.rank?.name || '—'}`;
+
+    // Build member map
+    const members = {};
+    for (const [id, m] of Object.entries(basic.members || {})) {
+      members[id] = {
+        name: m.name, respect: 0, hits: 0, assists: 0, losses: 0,
+        status: m.last_action?.status || 'Offline',
+        lastAction: m.last_action?.relative || 'Unknown'
+      };
+    }
+
+    // Tally attacks — using real result names from the API
+    for (const atk of Object.values(attacks.attacks || {})) {
+      const attackerId = String(atk.attacker_id);
+      const defenderId = String(atk.defender_id);
+
+      // Credit attacker (must be a faction member)
+      if (members[attackerId]) {
+        if (HIT_RESULTS.includes(atk.result)) {
+          members[attackerId].hits++;
+          members[attackerId].respect += atk.respect_gain || 0;
+        } else if (atk.result === 'Assist') {
+          members[attackerId].assists++;
+        } else if (atk.result === 'Lost' || atk.result === 'Stalemate' || atk.result === 'Interrupted') {
+          members[attackerId].losses++;
+        }
+      }
+    }
+
+    const arr = Object.values(members);
+    const totResp    = arr.reduce((s,m) => s + m.respect, 0);
+    const totHits    = arr.reduce((s,m) => s + m.hits, 0);
+    const totAssists = arr.reduce((s,m) => s + m.assists, 0);
+    const totLosses  = arr.reduce((s,m) => s + m.losses, 0);
+    const online     = arr.filter(m => m.status === 'Online').length;
+
+    document.getElementById('m-respect').textContent  = totResp.toFixed(2);
+    document.getElementById('m-hits').textContent     = totHits;
+    document.getElementById('m-assists').textContent  = totAssists;
+    document.getElementById('m-losses').textContent   = totLosses;
+    document.getElementById('m-online').textContent   = online;
+    document.getElementById('m-total-members').textContent = `of ${arr.length} members`;
+    document.getElementById('memberCount').textContent = `${arr.length} members`;
+
+    renderMembersTable(arr);
+    renderLeaderboard(arr);
+    setStatus('ok', `Connected · ${basic.name}`);
+    document.getElementById('lastUpdated').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+  } catch(e) {
+    setStatus('err', 'Fetch failed — check API key');
+    console.error(e);
+  }
+}
+
+function renderMembersTable(arr) {
+  const sorted = [...arr].sort((a,b) => {
+    const o = { Online:0, Idle:1, Offline:2 };
+    return (o[a.status]??2) - (o[b.status]??2);
+  });
+  const body = document.getElementById('membersBody');
+  if (!sorted.length) { body.innerHTML = '<tr><td colspan="5" class="empty">No members found</td></tr>'; return; }
+  body.innerHTML = sorted.map(m => {
+    const cls = m.status==='Online' ? 'status-online' : m.status==='Idle' ? 'status-idle' : 'status-offline';
+    return `<tr>
+      <td class="member-name">${m.name}</td>
+      <td><span class="status-dot ${cls}"></span><span class="last-seen">${m.status==='Online'?'Online':m.lastAction}</span></td>
+      <td class="num respect-val">${m.respect.toFixed(2)}</td>
+      <td class="num">${m.hits}</td>
+      <td class="num">${m.assists}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderLeaderboard(arr) {
+  const sorted = [...arr].sort((a,b) => b.respect - a.respect).slice(0, 10);
+  const body = document.getElementById('leaderBody');
+  if (!sorted.length || sorted.every(m => m.respect === 0)) {
+    body.innerHTML = '<tr><td colspan="4" class="empty">No attacks recorded today</td></tr>'; return;
+  }
+  const colors = ['#e84040','#f97316','#eab308'];
+  body.innerHTML = sorted.map((m,i) => `<tr>
+    <td style="font-family:var(--mono);font-size:11px;color:${colors[i]||'var(--muted)'};">${i+1}</td>
+    <td class="member-name">${m.name}</td>
+    <td class="num respect-val">${m.respect.toFixed(2)}</td>
+    <td class="num">${m.hits}</td>
+  </tr>`).join('');
+}
+
+async function fetchHistoricalData() {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/data`);
+    const files = await res.json();
+    if (!Array.isArray(files)) return;
+    const jsonFiles = files.filter(f => f.name.endsWith('.json'))
+      .sort((a,b) => b.name.localeCompare(a.name)).slice(0, 14);
+    const results = await Promise.all(jsonFiles.map(f => fetch(f.download_url).then(r => r.json())));
+    historicalData = results.reverse();
+    renderChart();
+  } catch(e) { console.warn('Historical data fetch failed', e); }
+}
+
+function renderChart() {
+  const labels = historicalData.map(d => d.date.slice(5));
+  const totals = key => historicalData.map(d =>
+    parseFloat(((d.members||[]).reduce((s,m) => s + (m[key]||0), 0)).toFixed(2))
+  );
+  const datasets = [];
+  if (activeStats.respect) datasets.push({ label:'Respect', data:totals('respect'), borderColor:'#e84040', backgroundColor:'rgba(232,64,64,0.08)', tension:0.3, pointRadius:3, pointHoverRadius:5, borderWidth:2 });
+  if (activeStats.hits)    datasets.push({ label:'Hits',    data:totals('hits'),    borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.08)', tension:0.3, pointRadius:3, pointHoverRadius:5, borderWidth:2 });
+  if (activeStats.assists) datasets.push({ label:'Assists', data:totals('assists'), borderColor:'#22c55e', backgroundColor:'rgba(34,197,94,0.08)',  tension:0.3, pointRadius:3, pointHoverRadius:5, borderWidth:2 });
+  if (activeStats.losses)  datasets.push({ label:'Losses',  data:totals('losses'),  borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)', tension:0.3, pointRadius:3, pointHoverRadius:5, borderWidth:2 });
+
+  if (chart) { chart.data.labels = labels; chart.data.datasets = datasets; chart.update(); return; }
+  chart = new Chart(document.getElementById('mainChart'), {
+    type: 'line', data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111520', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+          titleColor: '#64748b', bodyColor: '#e2e8f0',
+          titleFont: { family: 'Share Tech Mono', size: 11 },
+          bodyFont: { family: 'Share Tech Mono', size: 12 }, padding: 10
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', font: { family: 'Share Tech Mono', size: 10 } } },
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', font: { family: 'Share Tech Mono', size: 10 } }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function toggleStat(el) {
+  const stat = el.dataset.stat;
+  activeStats[stat] = !activeStats[stat];
+  el.classList.toggle('inactive', !activeStats[stat]);
+  renderChart();
+}
+
+function setStatus(type, msg) {
+  const el = document.getElementById('apiStatus');
+  el.className = 'api-status ' + type;
+  el.textContent = msg;
+}
+</script>
+</body>
+</html>
