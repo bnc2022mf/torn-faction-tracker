@@ -11,7 +11,7 @@
   :root {
     --bg: #0a0c10; --surface: #111520; --surface2: #171d2e;
     --border: rgba(255,255,255,0.07); --accent: #e84040; --accent2: #f97316;
-    --green: #22c55e; --blue: #3b82f6; --yellow: #eab308;
+    --green: #22c55e; --blue: #3b82f6; --yellow: #eab308; --purple: #a855f7;
     --text: #e2e8f0; --muted: #64748b;
     --mono: 'Share Tech Mono', monospace; --sans: 'Barlow', sans-serif;
   }
@@ -39,7 +39,7 @@
   .live-badge { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: 0.08em; }
   .live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
-  .countdown { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+  .countdown { font-family: var(--mono); font-size: 11px; color: var(--muted); }
   .btn-refresh {
     background: none; border: 1px solid var(--border); color: var(--muted);
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
@@ -70,6 +70,8 @@
   .api-status.loading { color: var(--yellow); }
   .last-updated { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-left: auto; }
   main { padding: 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
+
+  /* Metrics */
   .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
   .metric {
     background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
@@ -82,10 +84,49 @@
   .metric.green::before { background: var(--green); }
   .metric.blue::before { background: var(--blue); }
   .metric.yellow::before { background: var(--yellow); }
-  .metric.purple::before { background: #a855f7; }
+  .metric.purple::before { background: var(--purple); }
   .metric .label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
   .metric .val { font-family: var(--mono); font-size: 26px; color: var(--text); }
   .metric .sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 2px; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .tab-btn {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 8px 20px; cursor: pointer; background: none; border: none; color: var(--muted);
+    border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Date navigator */
+  .date-nav {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 10px 16px;
+  }
+  .date-nav-label { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .date-nav-btn {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    font-family: var(--mono); font-size: 13px; padding: 4px 12px; cursor: pointer; border-radius: 3px; transition: all 0.2s;
+  }
+  .date-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .date-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .date-display { font-family: var(--mono); font-size: 14px; color: var(--text); min-width: 110px; text-align: center; }
+  .date-select {
+    background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    font-family: var(--mono); font-size: 12px; padding: 4px 8px; border-radius: 3px; cursor: pointer; outline: none;
+  }
+  .date-select:focus { border-color: var(--accent); }
+  .today-btn {
+    background: none; border: 1px solid var(--accent); color: var(--accent);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 12px; cursor: pointer; border-radius: 3px; transition: all 0.2s; margin-left: auto;
+  }
+  .today-btn:hover { background: var(--accent); color: #fff; }
+
+  /* Panels */
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
   @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
   .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
@@ -94,7 +135,6 @@
     padding: 12px 16px; border-bottom: 1px solid var(--border);
   }
   .panel-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
-  .panel-body { padding: 16px; }
   .toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
   .toggle {
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
@@ -106,12 +146,14 @@
   .toggle.active-assists { border-color: var(--green); color: var(--green); }
   .toggle.active-losses { border-color: var(--accent2); color: var(--accent2); }
   .toggle.inactive { opacity: 0.3; }
-  .chart-wrap { position: relative; height: 260px; }
+  .chart-wrap { position: relative; height: 260px; padding: 16px; }
+
+  /* Tables */
   .members-table { width: 100%; border-collapse: collapse; }
   .members-table th {
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--muted);
     text-transform: uppercase; text-align: left; padding: 8px 10px;
-    border-bottom: 1px solid var(--border); font-weight: 400;
+    border-bottom: 1px solid var(--border); font-weight: 400; white-space: nowrap;
   }
   .members-table th.num { text-align: right; }
   .members-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
@@ -125,8 +167,10 @@
   .status-offline { background: var(--muted); }
   .last-seen { color: var(--muted); font-family: var(--mono); font-size: 11px; }
   .respect-val { color: var(--accent); }
-  .empty { text-align: center; padding: 3rem; color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; }
-  .full-panel { margin-bottom: 1.5rem; }
+  .alltime-val { color: var(--purple); }
+  .empty { text-align: center; padding: 3rem; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+  .full-mb { margin-bottom: 1.5rem; }
+  .rank-medal { font-size: 13px; margin-right: 4px; }
 </style>
 </head>
 <body>
@@ -154,6 +198,7 @@
 </div>
 
 <main>
+  <!-- Top metrics -->
   <div class="metrics">
     <div class="metric purple"><div class="label">Faction Respect</div><div class="val" id="m-faction-respect">—</div><div class="sub" id="m-faction-rank">All time total</div></div>
     <div class="metric red"><div class="label">Respect Today</div><div class="val" id="m-respect">—</div><div class="sub">From attacks</div></div>
@@ -163,60 +208,133 @@
     <div class="metric yellow"><div class="label">Members Online</div><div class="val" id="m-online">—</div><div class="sub" id="m-total-members"></div></div>
   </div>
 
-  <div class="full-panel panel">
-    <div class="panel-header">
-      <span class="panel-title">Daily Stats — Last 14 Days</span>
-      <div class="toggle-group">
-        <span class="toggle active-respect" data-stat="respect" onclick="toggleStat(this)">Respect</span>
-        <span class="toggle active-hits" data-stat="hits" onclick="toggleStat(this)">Hits</span>
-        <span class="toggle active-assists" data-stat="assists" onclick="toggleStat(this)">Assists</span>
-        <span class="toggle active-losses" data-stat="losses" onclick="toggleStat(this)">Losses</span>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('live', this)">Live</button>
+    <button class="tab-btn" onclick="switchTab('history', this)">History</button>
+    <button class="tab-btn" onclick="switchTab('alltime', this)">All-Time</button>
+  </div>
+
+  <!-- LIVE TAB -->
+  <div id="tab-live" class="tab-content active">
+    <div class="panel full-mb">
+      <div class="panel-header">
+        <span class="panel-title">Daily Stats — Last 14 Days</span>
+        <div class="toggle-group">
+          <span class="toggle active-respect" data-stat="respect" onclick="toggleStat(this)">Respect</span>
+          <span class="toggle active-hits" data-stat="hits" onclick="toggleStat(this)">Hits</span>
+          <span class="toggle active-assists" data-stat="assists" onclick="toggleStat(this)">Assists</span>
+          <span class="toggle active-losses" data-stat="losses" onclick="toggleStat(this)">Losses</span>
+        </div>
       </div>
+      <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
     </div>
-    <div class="panel-body">
-      <div class="chart-wrap"><canvas id="mainChart" role="img" aria-label="Daily faction stats over last 14 days">Daily faction statistics.</canvas></div>
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Member Activity</span>
+          <span class="panel-title" id="memberCount">—</span>
+        </div>
+        <div style="overflow-y:auto;max-height:420px;">
+          <table class="members-table">
+            <thead><tr>
+              <th>Member</th><th>Status</th>
+              <th class="num">Respect</th><th class="num">Hits</th><th class="num">Assists</th>
+            </tr></thead>
+            <tbody id="membersBody"><tr><td colspan="5" class="empty">Connect your API key</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Today's Leaderboard</span>
+          <span class="panel-title">By Respect Earned</span>
+        </div>
+        <div style="overflow-y:auto;max-height:420px;">
+          <table class="members-table">
+            <thead><tr>
+              <th>#</th><th>Member</th><th class="num">Respect</th><th class="num">Hits</th>
+            </tr></thead>
+            <tbody id="leaderBody"><tr><td colspan="4" class="empty">No data yet</td></tr></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="grid2">
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">Member Activity</span>
-        <span class="panel-title" id="memberCount">—</span>
+  <!-- HISTORY TAB -->
+  <div id="tab-history" class="tab-content">
+    <div class="date-nav">
+      <span class="date-nav-label">Date</span>
+      <button class="date-nav-btn" id="btnPrev" onclick="changeDate(-1)">← Prev</button>
+      <span class="date-display" id="dateDisplay">—</span>
+      <button class="date-nav-btn" id="btnNext" onclick="changeDate(1)">Next →</button>
+      <select class="date-select" id="dateSelect" onchange="jumpToDate(this.value)"></select>
+      <button class="today-btn" onclick="goToToday()">Today</button>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Member Stats</span>
+          <span class="panel-title" id="histDateLabel">—</span>
+        </div>
+        <div style="overflow-y:auto;max-height:500px;">
+          <table class="members-table">
+            <thead><tr>
+              <th>Member</th><th class="num">Respect</th><th class="num">Hits</th><th class="num">Assists</th><th class="num">Losses</th>
+            </tr></thead>
+            <tbody id="histMembersBody"><tr><td colspan="5" class="empty">Loading...</td></tr></tbody>
+          </table>
+        </div>
       </div>
-      <div style="overflow-y:auto;max-height:420px;">
-        <table class="members-table">
-          <thead><tr>
-            <th>Member</th><th>Status</th>
-            <th class="num">Respect</th><th class="num">Hits</th><th class="num">Assists</th>
-          </tr></thead>
-          <tbody id="membersBody"><tr><td colspan="5" class="empty">Connect your API key</td></tr></tbody>
-        </table>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Day Leaderboard</span>
+          <span class="panel-title" id="histLeadLabel">By Respect</span>
+        </div>
+        <div style="overflow-y:auto;max-height:500px;">
+          <table class="members-table">
+            <thead><tr>
+              <th>#</th><th>Member</th><th class="num">Respect</th><th class="num">Hits</th>
+            </tr></thead>
+            <tbody id="histLeaderBody"><tr><td colspan="4" class="empty">—</td></tr></tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <div class="panel">
+  </div>
+
+  <!-- ALL-TIME TAB -->
+  <div id="tab-alltime" class="tab-content">
+    <div class="panel full-mb">
       <div class="panel-header">
-        <span class="panel-title">Today's Leaderboard</span>
-        <span class="panel-title">By Respect Earned</span>
+        <span class="panel-title">All-Time Member Totals</span>
+        <span class="panel-title" id="alltimeDaysLabel">— days of data</span>
       </div>
-      <div style="overflow-y:auto;max-height:420px;">
+      <div style="overflow-y:auto;">
         <table class="members-table">
           <thead><tr>
-            <th>#</th><th>Member</th><th class="num">Respect</th><th class="num">Hits</th>
+            <th>#</th>
+            <th>Member</th>
+            <th class="num">Total Respect</th>
+            <th class="num">Total Hits</th>
+            <th class="num">Total Assists</th>
+            <th class="num">Total Losses</th>
+            <th class="num">Avg Respect/Day</th>
+            <th class="num">Active Days</th>
           </tr></thead>
-          <tbody id="leaderBody"><tr><td colspan="4" class="empty">No data yet</td></tr></tbody>
+          <tbody id="alltimeBody"><tr><td colspan="8" class="empty">Load historical data first</td></tr></tbody>
         </table>
       </div>
     </div>
   </div>
+
 </main>
 
 <script>
 const GITHUB_OWNER = 'bnc2022mf';
 const GITHUB_REPO  = 'torn-faction-tracker';
-
-// Attack results that count as a successful hit for the attacker
-const HIT_RESULTS = ['Attacked','Hospitalized','Mugged','Arrested','Escape','Timeout','Special'];
+const HIT_RESULTS  = ['Attacked','Hospitalized','Mugged','Arrested','Escape','Timeout','Special'];
 
 let apiKey = localStorage.getItem('torn_api_key') || '';
 let chart = null;
@@ -224,6 +342,9 @@ let activeStats = { respect: true, hits: true, assists: true, losses: true };
 let refreshTimer = null;
 let countdownVal = 300;
 let historicalData = [];
+let availableDates = [];
+let currentDateIndex = 0;
+let liveMembers = [];
 
 if (apiKey) { document.getElementById('apiKeyInput').value = apiKey; init(); }
 
@@ -263,89 +384,59 @@ function updateCountdown() {
   document.getElementById('countdown').textContent = `Next refresh in ${m}:${String(s).padStart(2,'0')}`;
 }
 
+// ── LIVE DATA ──────────────────────────────────────────────────────────────
 async function fetchLiveData() {
   if (!apiKey) return;
   try {
     const fromTs = Math.floor(Date.now() / 1000) - 86400;
-    const [basicRes, attacksRes, statsRes] = await Promise.all([
+    const [basicRes, attacksRes] = await Promise.all([
       fetch(`https://api.torn.com/faction/?selections=basic&key=${apiKey}`),
-      fetch(`https://api.torn.com/faction/?selections=attacks&from=${fromTs}&key=${apiKey}`),
-      fetch(`https://api.torn.com/faction/?selections=basic&key=${apiKey}`)
+      fetch(`https://api.torn.com/faction/?selections=attacks&from=${fromTs}&key=${apiKey}`)
     ]);
     const basic   = await basicRes.json();
     const attacks = await attacksRes.json();
-
     if (basic.error) { setStatus('err', `Error: ${basic.error.error}`); return; }
 
-    // Faction name + total respect
     document.getElementById('factionName').textContent = `${basic.name} · Live Stats`;
-    document.title = `${basic.name} · Faction Dashboard`;
-    const factionRespect = basic.respect || 0;
-    document.getElementById('m-faction-respect').textContent = factionRespect.toLocaleString();
-    document.getElementById('m-faction-rank').textContent = `Rank: ${basic.rank?.name || '—'}`;
+    document.title = `${basic.name} · Dashboard`;
+    document.getElementById('m-faction-respect').textContent = (basic.respect||0).toLocaleString();
+    document.getElementById('m-faction-rank').textContent = `Rank: ${basic.rank?.name||'—'}`;
 
-    // Build member map
     const members = {};
     for (const [id, m] of Object.entries(basic.members || {})) {
-      members[id] = {
-        name: m.name, respect: 0, hits: 0, assists: 0, losses: 0,
-        status: m.last_action?.status || 'Offline',
-        lastAction: m.last_action?.relative || 'Unknown'
-      };
+      members[id] = { name: m.name, respect: 0, hits: 0, assists: 0, losses: 0,
+        status: m.last_action?.status || 'Offline', lastAction: m.last_action?.relative || 'Unknown' };
     }
-
-    // Tally attacks — using real result names from the API
     for (const atk of Object.values(attacks.attacks || {})) {
-      const attackerId = String(atk.attacker_id);
-      const defenderId = String(atk.defender_id);
-
-      // Credit attacker (must be a faction member)
-      if (members[attackerId]) {
-        if (HIT_RESULTS.includes(atk.result)) {
-          members[attackerId].hits++;
-          members[attackerId].respect += atk.respect_gain || 0;
-        } else if (atk.result === 'Assist') {
-          members[attackerId].assists++;
-        } else if (atk.result === 'Lost' || atk.result === 'Stalemate' || atk.result === 'Interrupted') {
-          members[attackerId].losses++;
-        }
-      }
+      const id = String(atk.attacker_id);
+      if (!members[id]) continue;
+      if (HIT_RESULTS.includes(atk.result)) { members[id].hits++; members[id].respect += atk.respect_gain || 0; }
+      else if (atk.result === 'Assist') members[id].assists++;
+      else if (['Lost','Stalemate','Interrupted'].includes(atk.result)) members[id].losses++;
     }
 
-    const arr = Object.values(members);
-    const totResp    = arr.reduce((s,m) => s + m.respect, 0);
-    const totHits    = arr.reduce((s,m) => s + m.hits, 0);
-    const totAssists = arr.reduce((s,m) => s + m.assists, 0);
-    const totLosses  = arr.reduce((s,m) => s + m.losses, 0);
-    const online     = arr.filter(m => m.status === 'Online').length;
-
-    document.getElementById('m-respect').textContent  = totResp.toFixed(2);
-    document.getElementById('m-hits').textContent     = totHits;
-    document.getElementById('m-assists').textContent  = totAssists;
-    document.getElementById('m-losses').textContent   = totLosses;
+    liveMembers = Object.values(members);
+    const online = liveMembers.filter(m => m.status === 'Online').length;
+    document.getElementById('m-respect').textContent  = liveMembers.reduce((s,m)=>s+m.respect,0).toFixed(2);
+    document.getElementById('m-hits').textContent     = liveMembers.reduce((s,m)=>s+m.hits,0);
+    document.getElementById('m-assists').textContent  = liveMembers.reduce((s,m)=>s+m.assists,0);
+    document.getElementById('m-losses').textContent   = liveMembers.reduce((s,m)=>s+m.losses,0);
     document.getElementById('m-online').textContent   = online;
-    document.getElementById('m-total-members').textContent = `of ${arr.length} members`;
-    document.getElementById('memberCount').textContent = `${arr.length} members`;
+    document.getElementById('m-total-members').textContent = `of ${liveMembers.length} members`;
+    document.getElementById('memberCount').textContent = `${liveMembers.length} members`;
 
-    renderMembersTable(arr);
-    renderLeaderboard(arr);
+    renderMembersTable(liveMembers);
+    renderLeaderboard(liveMembers);
     setStatus('ok', `Connected · ${basic.name}`);
     document.getElementById('lastUpdated').textContent = `Updated ${new Date().toLocaleTimeString()}`;
-  } catch(e) {
-    setStatus('err', 'Fetch failed — check API key');
-    console.error(e);
-  }
+  } catch(e) { setStatus('err', 'Fetch failed'); }
 }
 
 function renderMembersTable(arr) {
-  const sorted = [...arr].sort((a,b) => {
-    const o = { Online:0, Idle:1, Offline:2 };
-    return (o[a.status]??2) - (o[b.status]??2);
-  });
+  const sorted = [...arr].sort((a,b) => ({ Online:0,Idle:1,Offline:2 }[a.status]??2) - ({ Online:0,Idle:1,Offline:2 }[b.status]??2));
   const body = document.getElementById('membersBody');
-  if (!sorted.length) { body.innerHTML = '<tr><td colspan="5" class="empty">No members found</td></tr>'; return; }
   body.innerHTML = sorted.map(m => {
-    const cls = m.status==='Online' ? 'status-online' : m.status==='Idle' ? 'status-idle' : 'status-offline';
+    const cls = m.status==='Online'?'status-online':m.status==='Idle'?'status-idle':'status-offline';
     return `<tr>
       <td class="member-name">${m.name}</td>
       <td><span class="status-dot ${cls}"></span><span class="last-seen">${m.status==='Online'?'Online':m.lastAction}</span></td>
@@ -357,43 +448,138 @@ function renderMembersTable(arr) {
 }
 
 function renderLeaderboard(arr) {
-  const sorted = [...arr].sort((a,b) => b.respect - a.respect).slice(0, 10);
+  const sorted = [...arr].sort((a,b) => b.respect - a.respect).slice(0,10);
   const body = document.getElementById('leaderBody');
-  if (!sorted.length || sorted.every(m => m.respect === 0)) {
-    body.innerHTML = '<tr><td colspan="4" class="empty">No attacks recorded today</td></tr>'; return;
-  }
-  const colors = ['#e84040','#f97316','#eab308'];
+  if (sorted.every(m => m.respect === 0)) { body.innerHTML = '<tr><td colspan="4" class="empty">No attacks today</td></tr>'; return; }
+  const medals = ['🥇','🥈','🥉'];
   body.innerHTML = sorted.map((m,i) => `<tr>
-    <td style="font-family:var(--mono);font-size:11px;color:${colors[i]||'var(--muted)'};">${i+1}</td>
+    <td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${medals[i]||i+1}</td>
     <td class="member-name">${m.name}</td>
     <td class="num respect-val">${m.respect.toFixed(2)}</td>
     <td class="num">${m.hits}</td>
   </tr>`).join('');
 }
 
+// ── HISTORICAL DATA ─────────────────────────────────────────────────────────
 async function fetchHistoricalData() {
   try {
     const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/data`);
     const files = await res.json();
     if (!Array.isArray(files)) return;
-    const jsonFiles = files.filter(f => f.name.endsWith('.json'))
-      .sort((a,b) => b.name.localeCompare(a.name)).slice(0, 14);
+    const jsonFiles = files.filter(f => f.name.endsWith('.json')).sort((a,b) => a.name.localeCompare(b.name));
     const results = await Promise.all(jsonFiles.map(f => fetch(f.download_url).then(r => r.json())));
-    historicalData = results.reverse();
+    historicalData = results;
+    availableDates = results.map(d => d.date);
+
+    // Set current date to latest
+    currentDateIndex = availableDates.length - 1;
+
+    populateDateSelect();
     renderChart();
-  } catch(e) { console.warn('Historical data fetch failed', e); }
+    renderHistoryDay();
+    renderAllTime();
+  } catch(e) { console.warn('Historical fetch failed', e); }
 }
 
+function populateDateSelect() {
+  const sel = document.getElementById('dateSelect');
+  sel.innerHTML = availableDates.map((d,i) => `<option value="${i}" ${i===currentDateIndex?'selected':''}>${d}</option>`).join('');
+}
+
+function changeDate(dir) {
+  currentDateIndex = Math.max(0, Math.min(availableDates.length - 1, currentDateIndex + dir));
+  populateDateSelect();
+  renderHistoryDay();
+}
+
+function jumpToDate(idx) {
+  currentDateIndex = parseInt(idx);
+  renderHistoryDay();
+}
+
+function goToToday() {
+  currentDateIndex = availableDates.length - 1;
+  populateDateSelect();
+  renderHistoryDay();
+}
+
+function renderHistoryDay() {
+  const day = historicalData[currentDateIndex];
+  if (!day) return;
+
+  document.getElementById('dateDisplay').textContent = day.date;
+  document.getElementById('histDateLabel').textContent = day.date;
+  document.getElementById('btnPrev').disabled = currentDateIndex === 0;
+  document.getElementById('btnNext').disabled = currentDateIndex === availableDates.length - 1;
+
+  const members = [...(day.members || [])].sort((a,b) => b.respect - a.respect);
+
+  // Members table
+  const mbody = document.getElementById('histMembersBody');
+  mbody.innerHTML = members.length ? members.map(m => `<tr>
+    <td class="member-name">${m.name}</td>
+    <td class="num respect-val">${(m.respect||0).toFixed(2)}</td>
+    <td class="num">${m.hits||0}</td>
+    <td class="num">${m.assists||0}</td>
+    <td class="num">${m.losses||0}</td>
+  </tr>`).join('') : '<tr><td colspan="5" class="empty">No data for this day</td></tr>';
+
+  // Leaderboard
+  const lbody = document.getElementById('histLeaderBody');
+  const medals = ['🥇','🥈','🥉'];
+  const active = members.filter(m => (m.respect||0) > 0);
+  lbody.innerHTML = active.length ? active.slice(0,10).map((m,i) => `<tr>
+    <td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${medals[i]||i+1}</td>
+    <td class="member-name">${m.name}</td>
+    <td class="num respect-val">${(m.respect||0).toFixed(2)}</td>
+    <td class="num">${m.hits||0}</td>
+  </tr>`).join('') : '<tr><td colspan="4" class="empty">No attacks this day</td></tr>';
+}
+
+// ── ALL-TIME ────────────────────────────────────────────────────────────────
+function renderAllTime() {
+  const totals = {};
+  historicalData.forEach(day => {
+    (day.members || []).forEach(m => {
+      const key = m.name.toLowerCase().trim();
+      if (!totals[key]) totals[key] = { name: m.name, respect: 0, hits: 0, assists: 0, losses: 0, activeDays: 0, days: 0 };
+      totals[key].respect += m.respect || 0;
+      totals[key].hits    += m.hits    || 0;
+      totals[key].assists += m.assists || 0;
+      totals[key].losses  += m.losses  || 0;
+      totals[key].days++;
+      if ((m.respect || 0) > 0 || (m.hits || 0) > 0) totals[key].activeDays++;
+    });
+  });
+
+  const sorted = Object.values(totals).sort((a,b) => b.respect - a.respect);
+  const totalDays = historicalData.length;
+  document.getElementById('alltimeDaysLabel').textContent = `${totalDays} days of data`;
+
+  const medals = ['🥇','🥈','🥉'];
+  const body = document.getElementById('alltimeBody');
+  body.innerHTML = sorted.map((m,i) => `<tr>
+    <td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${medals[i]||i+1}</td>
+    <td class="member-name">${m.name}</td>
+    <td class="num alltime-val">${m.respect.toFixed(2)}</td>
+    <td class="num">${m.hits}</td>
+    <td class="num">${m.assists}</td>
+    <td class="num">${m.losses}</td>
+    <td class="num" style="color:var(--muted);">${totalDays > 0 ? (m.respect / totalDays).toFixed(2) : '0.00'}</td>
+    <td class="num" style="color:var(--green);">${m.activeDays}</td>
+  </tr>`).join('');
+}
+
+// ── CHART ───────────────────────────────────────────────────────────────────
 function renderChart() {
-  const labels = historicalData.map(d => d.date.slice(5));
-  const totals = key => historicalData.map(d =>
-    parseFloat(((d.members||[]).reduce((s,m) => s + (m[key]||0), 0)).toFixed(2))
-  );
+  const last14 = historicalData.slice(-14);
+  const labels = last14.map(d => d.date.slice(5));
+  const totals = key => last14.map(d => parseFloat(((d.members||[]).reduce((s,m)=>s+(m[key]||0),0)).toFixed(2)));
   const datasets = [];
-  if (activeStats.respect) datasets.push({ label:'Respect', data:totals('respect'), borderColor:'#e84040', backgroundColor:'rgba(232,64,64,0.08)', tension:0.3, pointRadius:3, pointHoverRadius:5, borderWidth:2 });
-  if (activeStats.hits)    datasets.push({ label:'Hits',    data:totals('hits'),    borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.08)', tension:0.3, pointRadius:3, pointHoverRadius:5, borderWidth:2 });
-  if (activeStats.assists) datasets.push({ label:'Assists', data:totals('assists'), borderColor:'#22c55e', backgroundColor:'rgba(34,197,94,0.08)',  tension:0.3, pointRadius:3, pointHoverRadius:5, borderWidth:2 });
-  if (activeStats.losses)  datasets.push({ label:'Losses',  data:totals('losses'),  borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)', tension:0.3, pointRadius:3, pointHoverRadius:5, borderWidth:2 });
+  if (activeStats.respect) datasets.push({ label:'Respect', data:totals('respect'), borderColor:'#e84040', backgroundColor:'rgba(232,64,64,0.08)', tension:0.3, pointRadius:3, borderWidth:2 });
+  if (activeStats.hits)    datasets.push({ label:'Hits',    data:totals('hits'),    borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.08)', tension:0.3, pointRadius:3, borderWidth:2 });
+  if (activeStats.assists) datasets.push({ label:'Assists', data:totals('assists'), borderColor:'#22c55e', backgroundColor:'rgba(34,197,94,0.08)',  tension:0.3, pointRadius:3, borderWidth:2 });
+  if (activeStats.losses)  datasets.push({ label:'Losses',  data:totals('losses'),  borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)', tension:0.3, pointRadius:3, borderWidth:2 });
 
   if (chart) { chart.data.labels = labels; chart.data.datasets = datasets; chart.update(); return; }
   chart = new Chart(document.getElementById('mainChart'), {
@@ -423,6 +609,14 @@ function toggleStat(el) {
   activeStats[stat] = !activeStats[stat];
   el.classList.toggle('inactive', !activeStats[stat]);
   renderChart();
+}
+
+// ── TABS ────────────────────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
 }
 
 function setStatus(type, msg) {
