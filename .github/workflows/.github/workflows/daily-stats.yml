@@ -1,0 +1,33 @@
+name: Daily Stats Collection
+
+on:
+  schedule:
+    # Run every day at 11:59 PM UTC (adjust the time below if needed)
+    - cron: '59 23 * * *'
+  # Also allow manual trigger from GitHub UI
+  workflow_dispatch:
+
+jobs:
+  fetch-stats:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Run fetch stats
+        env:
+          TORN_API_KEY: ${{ secrets.TORN_API_KEY }}
+        run: node fetch_stats.js
+      
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add data/*.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Daily stats update - $(date -u +'%Y-%m-%d')" && git push)
