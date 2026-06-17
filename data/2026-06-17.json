@@ -55,13 +55,13 @@
       "respect": 0,
       "hits": 0,
       "assists": 0,
-      "losses": 0
+      "losses": 3
     },
     {
       "id": "3799223",
       "name": "Dwayne",
-      "respect": 18.37,
-      "hits": 7,
+      "respect": 9.16,
+      "hits": 4,
       "assists": 2,
       "losses": 0
     },
@@ -132,8 +132,8 @@
     {
       "id": "4273234",
       "name": "SugarAudi",
-      "respect": 0,
-      "hits": 0,
+      "respect": 16.849999999999998,
+      "hits": 6,
       "assists": 0,
       "losses": 0
     },
