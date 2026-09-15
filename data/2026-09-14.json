@@ -1,0 +1,333 @@
+{
+  "date": "2026-09-14",
+  "members": [
+    {
+      "id": "784387",
+      "name": "IxAnTxI",
+      "respect": 1.84,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "1502941",
+      "name": "ballboy10",
+      "respect": 1.46,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "1593698",
+      "name": "HEX",
+      "respect": 1.48,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "1659147",
+      "name": "Albatra",
+      "respect": 1.42,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "1837277",
+      "name": "-Liam",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "1976465",
+      "name": "SeeSine",
+      "respect": 1.28,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "2033123",
+      "name": "masterofshadows",
+      "respect": 1.56,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "2450866",
+      "name": "Turner",
+      "respect": 1.08,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "2510470",
+      "name": "Shooby",
+      "respect": 2.41,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "2672297",
+      "name": "cAnDyShOp",
+      "respect": 2.02,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "2715689",
+      "name": "Roulette",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 1
+    },
+    {
+      "id": "2758982",
+      "name": "Christicer",
+      "respect": 3.32,
+      "hits": 2,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "2796193",
+      "name": "toshko2",
+      "respect": 1.83,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3212620",
+      "name": "WokTheRipper",
+      "respect": 2.85,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3357110",
+      "name": "Tribune",
+      "respect": 0,
+      "hits": 0,
+      "assists": 1,
+      "losses": 0
+    },
+    {
+      "id": "3452107",
+      "name": "SoloMission",
+      "respect": 2.04,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3465204",
+      "name": "eFukt",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3485866",
+      "name": "FrankMoses",
+      "respect": 52.260000000000005,
+      "hits": 15,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3523568",
+      "name": "Triggerpoint",
+      "respect": 5.9,
+      "hits": 2,
+      "assists": 0,
+      "losses": 1
+    },
+    {
+      "id": "3613088",
+      "name": "kanditwel",
+      "respect": 2.18,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3691854",
+      "name": "_Him",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3692871",
+      "name": "1810",
+      "respect": 13.2,
+      "hits": 6,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3739255",
+      "name": "Vandarhar",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3748004",
+      "name": "XianRamirez",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3799223",
+      "name": "Dwayne",
+      "respect": 57.13000000000001,
+      "hits": 17,
+      "assists": 0,
+      "losses": 1
+    },
+    {
+      "id": "3910996",
+      "name": "Trixie867",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3922200",
+      "name": "MrRochambo",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "3952493",
+      "name": "Varkhael",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 1
+    },
+    {
+      "id": "4032463",
+      "name": "Astaroth",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4037773",
+      "name": "Punx",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4112061",
+      "name": "Zanderz77",
+      "respect": 10.23,
+      "hits": 3,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4118763",
+      "name": "Blacktavius",
+      "respect": 18.03,
+      "hits": 7,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4148807",
+      "name": "Tefin420",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4154652",
+      "name": "petpak",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4229979",
+      "name": "NorthernRiver",
+      "respect": 4.02,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4273234",
+      "name": "SugarAudi",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4290646",
+      "name": "unixbbc69",
+      "respect": 1.32,
+      "hits": 1,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4428615",
+      "name": "Mindful-Ally",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "4453673",
+      "name": "Niilla",
+      "respect": 12.200000000000001,
+      "hits": 6,
+      "assists": 0,
+      "losses": 1
+    },
+    {
+      "id": "4474645",
+      "name": "sullyb",
+      "respect": 0,
+      "hits": 0,
+      "assists": 0,
+      "losses": 0
+    },
+    {
+      "id": "",
+      "name": "",
+      "respect": 60.21,
+      "hits": 21,
+      "assists": 0,
+      "losses": 0
+    }
+  ]
+}
